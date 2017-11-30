@@ -1,0 +1,32 @@
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+  <link rel="stylesheet" href="assets/stylesheets/app.css" />
+
+  <title>AngularJS Game of Life</title>
+</head>
+<body ng-app="app">
+  <div class="main" ng-controller="WorldController as $ctrl">
+    <div class="world">
+      <div class="row" ng-repeat="row in $ctrl.world">
+        <div class="cell" ng-repeat="cell in row track by $index">
+          <a ng-model="$ctrl.world[$parent.$index][$index]" ng-click="$ctrl.toggleCell($parent.$index, $index)" ng-class="{alive: cell === 1}"></a>
+        </div>
+      </div>
+    </div>
+    <div class="controls">
+      <input type="number" ng-model="$ctrl.gridSize" />
+      <button ng-click="$ctrl.createWorld()">Rebuild World</button>
+      <button ng-click="$ctrl.getNextGen()">Next Generation</button>
+    </div>
+  </div>
+
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular.min.js"></script>
+  <script src="assets/javascripts/app.module.js"></script>
+  <script src="assets/javascripts/controllers/world.controller.js"></script>
+  <script src="assets/javascripts/services/gol.factory.js"></script>
+</body>
+</html>
