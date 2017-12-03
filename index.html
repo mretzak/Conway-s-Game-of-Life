@@ -4,23 +4,65 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
 
-  <link rel="stylesheet" href="assets/stylesheets/app.css" />
+  <link rel="icon" type="image/ico" href="favicon.ico">
+
+  <link href="https://fonts.googleapis.com/css?family=Barlow+Condensed|Open+Sans" rel="stylesheet">
+  <link href="assets/stylesheets/app.css" rel="stylesheet">
 
   <title>AngularJS Game of Life</title>
 </head>
 <body ng-app="app">
   <div class="main" ng-controller="WorldController as $ctrl">
-    <div class="world">
-      <div class="row" ng-repeat="row in $ctrl.world">
+    <div class="world" ng-class="$ctrl.worldCssClass">
+      <div class="row" ng-repeat="row in $ctrl.world track by $index">
         <div class="cell" ng-repeat="cell in row track by $index">
-          <a ng-model="$ctrl.world[$parent.$index][$index]" ng-click="$ctrl.toggleCell($parent.$index, $index)" ng-class="{alive: cell === 1}"></a>
+          <a ng-model="$ctrl.world[$parent.$index][$index]"
+             ng-click="$ctrl.toggleCell($parent.$index, $index)"
+             ng-class="{alive: cell === 1}"></a>
         </div>
       </div>
     </div>
     <div class="controls">
-      <input type="number" ng-model="$ctrl.gridSize" />
-      <button ng-click="$ctrl.createWorld()">Rebuild World</button>
-      <button ng-click="$ctrl.getNextGen()">Next Generation</button>
+      <h1>Conway's Game of Life</h1>
+
+      <div class="game">
+        <div class="actions">
+          <button class="btn primary"
+                  ng-click="$ctrl.getNextGen()"
+                  ng-disabled="$ctrl.autoPlay">Next Generation</button>
+          <button class="btn" ng-click="$ctrl.clearWorld()">Clear World</button>
+        </div>
+
+        <div>
+          <label for="autoplay">
+            <input id="autoplay"
+                   type="checkbox"
+                   ng-model="$ctrl.autoPlay"
+                   ng-change="$ctrl.toggleAutoPlay()">
+            Autoplay
+          </label>
+        </div>
+      </div>
+
+      <div class="settings">
+        <form name="gridForm">
+          <label for="size">World Size</label>
+
+          <div class="input">
+            <input name="size"
+                   type="number"
+                   ng-min="10"
+                   ng-max="64"
+                   ng-model="$ctrl.gridSize"
+                   ng-model-options="{ debounce: 250 }">
+            <button class="btn"
+                    ng-click="$ctrl.createWorld()"
+                    ng-disabled="gridForm.size.$invalid">Refresh</button>
+          </div>
+
+          <p class="error" ng-if="gridForm.size.$invalid">World size must be between 10 and 64</p>
+        </form>
+      </div>
     </div>
   </div>
 
